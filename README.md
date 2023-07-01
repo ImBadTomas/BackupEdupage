@@ -6,26 +6,28 @@ Tento projekt je zameraný na zálohovanie Edupage profilu, čo umožňuje uží
 
 ## ⚙️ Inštalácia
 
+**POTREBUJETE PYTHON3 MAŤ NAINŠTALOVANÝ**
+
 1. Sklonujte si tento repozitár na svoje zariadenie:
 ```
 git clone https://github.com/ImBadTomas/BackupEdupage
 ```
 2. Prejdite do priečinka s projektom:
+```
 cd zaholovanie-edupage-profilu
-
-3. Inštalujte potrebné závislosti:
-npm install
-
+```
+3. Inštalujte potrebné dependecy:
+```
+pip install -r edupage-api
+```
 
 ## 🚀 Použitie
 
-1. Vytvorte si osobný prístupový token pre Edupage API. Postup nájdete v dokumentácii Edupage API.
-2. V koreňovom priečinku projektu vytvorte súbor `.env` a nastavte nasledujúce premenné:
-EDUPAGE_API_TOKEN=your_token_here
-3. Spustite zálohovanie Edupage profilu príkazom:
-npm run backup
-4. Váš profil a dôležité dáta budú zálohované do priečinku `backup` v koreňovom priečinku projektu.
-
+1. Spusťte program  pomocou
+```
+py app.py
+```
+2. Done :D
 
 ## 📧 Kontakt
 
