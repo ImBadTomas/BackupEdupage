@@ -1,10 +1,14 @@
 from edupage_api import Edupage
-
+import sys
 edupage = Edupage()
 
 meno = input("Zadaj svoje meno(meno do edupage): ")
 heslo = input("Zadaj svoje heslo(heslo do edupage): ")
 skola = input("Zadaj svoju skolu(zsjavorku): ")
+
+if (meno or heslo or skola == ""):
+    print ("Niečo si nevyplnil!")
+    sys.exit(1)
 
 edupage.login(meno, heslo, skola)
 
@@ -53,7 +57,6 @@ with open("ucitelia.txt", "w", encoding="utf-8") as f:
 notifikace = edupage.get_notifications()
 
 with open("notifikace.txt", "w", encoding="utf-8") as f:
-    f.write("Meno(ID), Pohlavie, Nástup do školy, Typ")
     for notifikace in notifikace:
         f.write(f"{notifikace.author}, {notifikace.event_id}, {notifikace.event_type},{notifikace.text}, {notifikace.timestamp}\n------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 
