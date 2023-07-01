@@ -2,9 +2,9 @@ from edupage_api import Edupage
 
 edupage = Edupage()
 
-meno = "TomasDavidik"
-heslo = "4rlknznu9s"
-skola = "zsjavorku"
+meno = input("Zadaj svoje meno(meno do edupage): ")
+heslo = input("Zadaj svoje heslo(heslo do edupage): ")
+skola = input("Zadaj svoju skolu(zsjavorku): ")
 
 edupage.login(meno, heslo, skola)
 
