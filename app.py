@@ -1,14 +1,12 @@
 from edupage_api import Edupage
-import sys
 edupage = Edupage()
 
-meno = input("Zadaj svoje meno(meno do edupage): ")
-heslo = input("Zadaj svoje heslo(heslo do edupage): ")
-skola = input("Zadaj svoju skolu(zsjavorku): ")
+meno = "TomasDavidik" #input("Zadaj svoje meno(meno do edupage): ")
+heslo = "4rlknznu9s"#input("Zadaj svoje heslo(heslo do edupage): ")
+skola = "zsjavorku" #input("Zadaj svoju skolu(zsjavorku): ")
 
-if (meno or heslo or skola == ""):
-    print ("Niečo si nevyplnil!")
-    sys.exit(1)
+
+
 
 edupage.login(meno, heslo, skola)
 
