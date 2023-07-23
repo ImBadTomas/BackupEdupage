@@ -1,4 +1,5 @@
-from edupage_api import Edupage
+from edupage_api import Edupage, Term
+import os
 edupage = Edupage()
 
 meno = "TomasDavidik" #input("Zadaj svoje meno(meno do edupage): ")
@@ -6,30 +7,52 @@ heslo = "4rlknznu9s"#input("Zadaj svoje heslo(heslo do edupage): ")
 skola = "zsjavorku" #input("Zadaj svoju skolu(zsjavorku): ")
 
 
-
+try:
+    os.mkdir('znamky')
+except FileExistsError:
+    pass
 
 edupage.login(meno, heslo, skola)
 
 grades = edupage.get_grades()
-
 grades_by_subject = {}
 
-for grade in grades:
-    if grades_by_subject.get(grade.subject_name):
-        grades_by_subject[grade.subject_name] += [grade]
-    else:
-        grades_by_subject[grade.subject_name] = [grade]
+def get_school_years():
+  school_years = []
+  for year in range(2014, 2023):
+    school_years.append(year)
+  return school_years
 
-with open("znamky.txt", "w", encoding="utf-8") as f:
+def get_grades_for_term(year, term):
+  grades = edupage.get_grades_for_term(year, term)
+  return grades
+
+def save_grades_to_file(year, grades, term):
+  filename = f"{year}_{term}_grades.txt"
+  with open(os.path.join("znamky", filename), "w", encoding="utf-8") as f:
+    grades_by_subject = {}
+    for grade in grades:
+      if grades_by_subject.get(grade.subject_name):
+        grades_by_subject[grade.subject_name] += [grade]
+      else:
+        grades_by_subject[grade.subject_name] = [grade]
     for subject in grades_by_subject:
-        f.write(f"{subject}:\n")
-        for grade in grades_by_subject[subject]:
-            f.write(f"    {grade.title} -> ")
-            if grade.max_points != 100:
-                f.write(f"{grade.grade_n}/{grade.max_points}\n")
-            else:
-                f.write(f"{grade.percent}%\n")
+      f.write(f"{subject}:\n")
+      for grade in grades_by_subject[subject]:
+        f.write(f"    {grade.title} -> ")
+        if grade.max_points != 100:
+          f.write(f"{grade.grade_n}/{grade.max_points}\n")
+        else:
+          f.write(f"{grade.percent}%\n")
         f.write("----------------\n")
+
+if __name__ == "__main__":
+  school_years = get_school_years()
+  for year in school_years:
+    first_term_grades = get_grades_for_term(year, Term.FIRST)
+    save_grades_to_file(year, first_term_grades, "1polrok")
+    second_term_grades = get_grades_for_term(year, Term.SECOND)
+    save_grades_to_file(year, second_term_grades, "2polrok")
 
 zaci = edupage.get_all_students()
 
