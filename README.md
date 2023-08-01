@@ -2,7 +2,7 @@
 
 ## 📂 Popis
 
-Tento projekt je zameraný na zálohovanie Edupage profilu, čo umožňuje užívateľom uchovávať kópiu svojho profilu a dôležitých dát, aby sa predišlo ich strate. 
+Tento projekt je zameraný na zálohovanie Edupage profilu, čo umožňuje užívateľom uchovávať kópiu svojho profilu a dôležitých dát, aby sa predišlo ich strate. \n
 Tento Python súbor, je urobený veľmi na rýchlo, aby som si mohol zálohovať svoje súbory. Nebol robený na publikáciu, preto prosím sa "nehnevajte", že to je tak blbo napísané.
 
 ## ⚙️ Spustenie
