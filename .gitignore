@@ -1,1 +1,3 @@
 *.txt
+.vscode
+app2.py
