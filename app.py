@@ -31,7 +31,6 @@ def create_grades_folder():
     except FileExistsError:
         pass
 
-
 def get_school_years(currentrok):
     return list(range(2014, currentrok))
 
@@ -83,11 +82,13 @@ if __name__ == "__main__":
 
     print("Sťahujem všetkých žiakov školy...")
     zaci = edupage_client.get_all_students()
-
-    with open("ziaciskoly.txt", "w", encoding="utf-8") as f:
-        f.write("Meno(ID), KrátkeMeno, Trieda\n")
-        for zaci in zaci:
-            f.write(f"{zaci.name}, {zaci.gender.name}, {zaci.in_school_since}, {zaci.account_type.name}\n")
+    if zaci == "[]":
+        print("Škola nepovolila stiahnutie všetkých žiakov...")
+    else:
+        with open("ziaciskoly.txt", "w", encoding="utf-8") as f:
+            f.write("Meno(ID), KrátkeMeno, Trieda\n")
+            for zaci in zaci:
+                f.write(f"{zaci.name}, {zaci.gender.name}, {zaci.in_school_since}, {zaci.account_type.name}\n")
 
     print("Sťahujem žiakov v tvojej triede...")
     nasizaci = edupage_client.get_students()
