@@ -1,5 +1,5 @@
 import os
-from edupage_api import Edupage, Term
+from edupage_api import Edupage, Term, exceptions
 
 welcome_art = """
 \033[91m  ______    _                                _____                      _                 _
@@ -11,23 +11,23 @@ welcome_art = """
 \033[91m                   | |           __/ |
 \033[91m                   |_|          |___/
 \033[97m"""
-print(welcome_art + "Ďakujeme, za využitie tohoto jednoduchého python programu\n ")
+print(welcome_art + "Thank you for using this simple python program\n ")
 
 
 def get_credentials():
-    meno = input("Zadaj svoje meno(meno do edupage): ")
-    heslo = input("Zadaj svoje heslo(heslo do edupage): ")
-    skola = input("Zadaj tvojej školy subdoménu (subdomena.eduapge.org): ")
-    if not meno or not heslo or not skola:
-        print("Prihlasovacie údaje nemôžu byť prázdne.")
+    username = input("Enter your name(name in edupage): ")
+    password = input("Enter your password(edupage password): ")
+    schooldomain = input("Enter your school's subdomain (subdomain.eduapge.org): ")
+    if not username or not password or not schooldomain:
+        print("Login details cannot be blank.")
         exit()
     
-    return meno, heslo, skola
+    return username, password, schooldomain
 
 
 def create_grades_folder():
     try:
-        os.mkdir('znamky')
+        os.mkdir('grades')
     except FileExistsError:
         pass
 
@@ -46,8 +46,8 @@ def get_grades_by_subject(grades):
 
 
 def save_grades_to_file(year, term, grades_by_subject):
-    filename = f"{year}_{term}_znamky.txt"
-    with open(os.path.join("znamky", filename), "w", encoding="utf-8") as f:
+    filename = f"{year}_{term}_grades.txt"
+    with open(os.path.join("grades", filename), "w", encoding="utf-8") as f:
         for subject, subject_grades in grades_by_subject.items():
             f.write("----------------\n")
             f.write(f"{subject}:\n")
@@ -59,62 +59,78 @@ def save_grades_to_file(year, term, grades_by_subject):
                     f.write(f"{grade.percent}%\n")
 
 
-
 if __name__ == "__main__":
-    edupage_client = Edupage()
-    meno, heslo, skola = get_credentials()
-    print("Vytváram zložku znamky")
-    create_grades_folder()
-    print("Prihlasujem sa do Edupage...")
-    edupage_client.login(meno, heslo, skola)
-    grades = edupage_client.get_grades()
-    currentrok = edupage_client.get_school_year()
-    school_years = get_school_years(currentrok)
+    try:
+        edupage_client = Edupage()
+        username, password, schooldomain = get_credentials()
+        print("Creating grades folder")
+        create_grades_folder()
+        print("Logging in to Edupage...")
+        try:
+            edupage_client.login(username, password, schooldomain)
+        except exceptions.BadCredentialsException:
+            print("You entered wrong username or password")
+            exit()
+        else:
+            print("Something went wrong, please try again later.")
+            exit
+       
+        grades = edupage_client.get_grades()
+        currentyear = edupage_client.get_school_year()
+        school_years = get_school_years(currentyear)
+    
+        for year in school_years:
+            print(f"Downloading grades from year {year}")
+            first_term_grades = edupage_client.get_grades_for_term(year, Term.FIRST)
+            second_term_grades = edupage_client.get_grades_for_term(year, Term.SECOND)
+            all_grades = first_term_grades + second_term_grades
+            grades_by_subject = get_grades_by_subject(all_grades)
+            save_grades_to_file(year, "1term", grades_by_subject)
+            save_grades_to_file(year, "2term", grades_by_subject)
 
-    for year in school_years:
-        print(f"Sťahujem známky z roku {year}")
-        first_term_grades = edupage_client.get_grades_for_term(year, Term.FIRST)
-        second_term_grades = edupage_client.get_grades_for_term(year, Term.SECOND)
-        all_grades = first_term_grades + second_term_grades
-        grades_by_subject = get_grades_by_subject(all_grades)
-        save_grades_to_file(year, "1polrok", grades_by_subject)
-        save_grades_to_file(year, "2polrok", grades_by_subject)
+        print("Downloading all students from your school...")
+        allstudents = edupage_client.get_all_students()
+        if allstudents == "[]":
+            print("The school did not authorise the download of all pupils...")
+        else:
+           with open("allstudents.txt", "w", encoding="utf-8") as f:
+                f.write("User(ID), ShortName, Class\n")
+                for allstudents in allstudents:
+                    f.write(f"{allstudents.name}, {allstudents.gender.name}, {allstudents.in_school_since}, {allstudents.account_type.name}\n")
 
-    print("Sťahujem všetkých žiakov školy...")
-    zaci = edupage_client.get_all_students()
-    if zaci == "[]":
-        print("Škola nepovolila stiahnutie všetkých žiakov...")
-    else:
-        with open("ziaciskoly.txt", "w", encoding="utf-8") as f:
-            f.write("Meno(ID), KrátkeMeno, Trieda\n")
-            for zaci in zaci:
-                f.write(f"{zaci.name}, {zaci.gender.name}, {zaci.in_school_since}, {zaci.account_type.name}\n")
-
-    print("Sťahujem žiakov v tvojej triede...")
-    nasizaci = edupage_client.get_students()
-    with open("ziacivtriede.txt", "w", encoding="utf-8") as f:
-        f.write("Meno(ID), KrátkeMeno, Trieda\n")
-        for nasi in nasizaci:
-            f.write(f"{nasi}\n")
+        print("Downloading the students in your class...")
+        ourstudents = edupage_client.get_students()
+        with open("studentsinyourclass.txt", "w", encoding="utf-8") as f:
+            f.write("User(ID), ShortName, Class\n")
+            for ourstudents in ourstudents:
+                f.write(f"{ourstudents}\n")
 
 
-    print("Sťahujem učiteľov na škole...")
-    teachers = edupage_client.get_teachers()
-    with open("ucitelia.txt", "w", encoding="utf-8") as f:
-        f.write("Meno(ID), Pohlavie, Nástup do školy, Typ\n")
-        for teacher in teachers:
-            f.write(f"{teacher.name}({teacher.person_id}), {teacher.gender.name}, "
+        print("Downloading teachers in schools...")
+        teachers = edupage_client.get_teachers()
+        with open("teachers.txt", "w", encoding="utf-8") as f:
+           f.write("User(ID), Gender, InSchoolSince, Type\n")
+           for teacher in teachers:
+                f.write(f"{teacher.name}({teacher.person_id}), {teacher.gender.name}, "
                     f"{teacher.in_school_since.year}/{teacher.in_school_since.month}/{teacher.in_school_since.day}, "
                     f"{teacher.account_type.name}\n")
 
-    print("Sťahujem najnovšie notifikácie...")
-    notifications = edupage_client.get_notifications()
-    with open("notifikace.txt", "w", encoding="utf-8") as f:
-        for notifikace in notifications:
-            f.write(f"{notifikace.author}, {notifikace.event_id}, {notifikace.event_type}, {notifikace.text}, "
-                    f"{notifikace.timestamp}\n------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
+        print("Downloading your notifications...")
+        notifications = edupage_client.get_notifications()
+        with open("notifications.txt", "w", encoding="utf-8") as f:
+            for notifikace in notifications:
+                f.write(f"{notifikace.author}, {notifikace.event_id}, {notifikace.event_type}, {notifikace.text}, "
+                        f"{notifikace.timestamp}\n------------------------------------------------------------------------------------------------------------------------------------------------------------\n")
 
-    print("Sťahujem tvoje Edupage School ID")
-    tvojeid = edupage_client.get_user_id()
-    with open("tvojeid.txt", "w", encoding="utf-8") as f:
-        f.write(f"{tvojeid}")
+        print("Download your Edupage School ID")
+        tvojeid = edupage_client.get_user_id()
+        with open("yourid.txt", "w", encoding="utf-8") as f:
+            f.write(f"{tvojeid}")
+    except ConnectionError:
+        print("Edupage timeouted your connection please wait like 30minutes!")
+    except exceptions.NotLoggedInException:
+        print("Wtf? How you cannot be logged in, please try again later. This can be some bug or error. I dont have any idea how to fix this.")
+    except exceptions.RequestError:
+        print("Edupage is so laggy and old. So request error is something that i except, so try again please.")
+    else:
+        print("Something went wrong, please try again later.")
