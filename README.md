@@ -25,13 +25,13 @@ pip install -r requirements.txt
 
 ## 🚀 Použitie
 
-1. Spusťte program  pomocou
+1. Spusťte program pomocou
 ```
 py app.py
 ```
-2. Počkajte dokým sa prográm nevypne
+2. Wait until the program shuts down
 
-## 📧 Kontakt
+## 📧 Contact
 
-Ak máte akékoľvek otázky alebo návrhy, kontaktujte ma v Issues.
-Ak potrebujete ďalšiu pomoc, neváhajte sa opýtať.
+If you have any questions or suggestions, please contact me in Issues.
+If you need further assistance, please feel free to ask.
