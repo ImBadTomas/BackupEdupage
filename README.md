@@ -1,31 +1,31 @@
-# Zálohovanie Edupagu
+# Backup Edupage
 
-## 📂 Popis
+## 📂 Description
 
 Tento súbor ti stiahne **EduPage profil**, čo umožňuje užívateľom uchovávať kópiu svojho profilu a dôležitých dát, aby sa **predišlo** ich strate. <br>
 Na stiahnutie sa používa **Python package** [EdupageAPI](https://github.com/ivanhrabcak/edupage-api)<br>
 Tento Python súbor, je urobený veľmi na **rýchlo**, aby som si mohol zálohovať svoje súbory. Nebol robený na publikáciu, preto prosím sa "nehnevajte", že to je tak blbo napísané.
 
-## ⚙️ Spustenie
+## ⚙️ Start
 
-**POTREBUJETE PYTHON3 MAŤ NAINŠTALOVANÝ** (Program bol testovaný na Python3.11 a 3.9)
+**YOU NEED TO HAVE PYTHON3 INSTALLED** (The program has been tested on Python3.11 and 3.9)
 
-1. Sklonujte si tento repozitár na svoje zariadenie:
+1. Clone this repository to your device:
 ```
 git clone https://github.com/ImBadTomas/BackupEdupage
 ```
-2. Prejdite do priečinka s projektom:
+2. Go to the project folder:
 ```
 cd BackupEdupage
 ```
-3. Inštalujte potrebné dependecy:
+3. Install the necessary dependecy:
 ```
 pip install -r requirements.txt
 ```
 
-## 🚀 Použitie
+## 🚀 Usage
 
-1. Spusťte program pomocou
+1. Run the program using
 ```
 py app.py
 ```
