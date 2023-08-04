@@ -2,9 +2,9 @@
 
 ## 📂 Description
 
-Tento súbor ti stiahne **EduPage profil**, čo umožňuje užívateľom uchovávať kópiu svojho profilu a dôležitých dát, aby sa **predišlo** ich strate. <br>
-Na stiahnutie sa používa **Python package** [EdupageAPI](https://github.com/ivanhrabcak/edupage-api)<br>
-Tento Python súbor, je urobený veľmi na **rýchlo**, aby som si mohol zálohovať svoje súbory. Nebol robený na publikáciu, preto prosím sa "nehnevajte", že to je tak blbo napísané.
+This file will download your **EduPage profile**, allowing users to keep a copy of their profile and important data to **prevent** their loss. <br>
+The download uses the **Python package** [EdupageAPI](https://github.com/ivanhrabcak/edupage-api)<br>
+This Python file is made very **quick** so I can back up my files. It wasn't made for publication, so please don't be "angry" that it's so stupidly written.
 
 ## ⚙️ Start
 
