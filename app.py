@@ -15,6 +15,7 @@ print(welcome_art + "Thank you for using this simple python program\n ")
 
 
 def get_credentials():
+    print("Please fill up login information")
     username = input("Enter your name(name in edupage): ")
     password = input("Enter your password(edupage password): ")
     schooldomain = input("Enter your school's subdomain (subdomain.eduapge.org): ")
@@ -32,7 +33,17 @@ def create_grades_folder():
         pass
 
 def get_school_years(currentrok):
-    return list(range(2014, currentrok))
+    yearyoustarted = input("Which year was your Edupage registered? (Propably when you get into the school) ")
+    if not isinstance(yearyoustarted, int):
+        print(f"I don´t know if {yearyoustarted} is a year :D ")
+        exit()
+    if yearyoustarted < 2012:
+        print(f"I don´t know if you started in year {yearyoustarted} or do you want to timeout your Edupage?.")
+        exit()
+    if yearyoustarted > currentrok:
+        print(f"Yes, you are very funny...")
+        exit()
+    return list(range(yearyoustarted, currentrok))
 
 
 def get_grades_by_subject(grades):
@@ -72,8 +83,7 @@ if __name__ == "__main__":
             print("You entered wrong username or password")
             exit()
         else:
-            print("Something went wrong, please try again later.")
-            exit
+            print("Logged in!")
        
         grades = edupage_client.get_grades()
         currentyear = edupage_client.get_school_year()
