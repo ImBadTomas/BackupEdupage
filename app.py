@@ -1,5 +1,6 @@
 import os
 from edupage_api import Edupage, Term, exceptions
+from requests import exceptions as requestexceptions
 
 welcome_art = """
 \033[91m  ______    _                                _____                      _                 _
@@ -33,14 +34,14 @@ def create_grades_folder():
         pass
 
 def get_school_years(currentrok):
-    yearyoustarted = input("Which year was your Edupage registered? (Propably when you get into the school) ")
-    if not isinstance(yearyoustarted, int):
+    yearyoustarted = int(input("Which year was your Edupage registered? (Propably when you get into the school) "))
+    if not str(yearyoustarted).isdigit():
         print(f"I don´t know if {yearyoustarted} is a year :D ")
         exit()
     if yearyoustarted < 2012:
         print(f"I don´t know if you started in year {yearyoustarted} or do you want to timeout your Edupage?.")
         exit()
-    if yearyoustarted > currentrok:
+    if yearyoustarted > 2023:
         print(f"Yes, you are very funny...")
         exit()
     return list(range(yearyoustarted, currentrok))
@@ -111,9 +112,9 @@ if __name__ == "__main__":
         print("Downloading the students in your class...")
         ourstudents = edupage_client.get_students()
         with open("studentsinyourclass.txt", "w", encoding="utf-8") as f:
-            f.write("User(ID), ShortName, Class\n")
+            f.write("NumberInClass User, Gender, InSchoolSince\n")
             for ourstudents in ourstudents:
-                f.write(f"{ourstudents}\n")
+                f.write(f"{ourstudents.number_in_class} {ourstudents.name} {ourstudents.gender} {ourstudents.in_school_since} {ourstudents.account_type}\n")
 
 
         print("Downloading teachers in schools...")
@@ -136,11 +137,21 @@ if __name__ == "__main__":
         tvojeid = edupage_client.get_user_id()
         with open("yourid.txt", "w", encoding="utf-8") as f:
             f.write(f"{tvojeid}")
+
+        print("Successfully downloaded your Edupage profile! Thank you for using this simple python program!")
+        exit()
     except ConnectionError:
         print("Edupage timeouted your connection please wait like 30minutes!")
+        exit()
     except exceptions.NotLoggedInException:
         print("Wtf? How you cannot be logged in, please try again later. This can be some bug or error. I dont have any idea how to fix this.")
+        exit()
     except exceptions.RequestError:
         print("Edupage is so laggy and old. So request error is something that i except, so try again please.")
+        exit()
+    except requestexceptions.ConnectionError:
+        print("Edupage timeouted your connection please wait like 30minutes!")
+        exit()
     else:
         print("Something went wrong, please try again later.")
+        exit()
