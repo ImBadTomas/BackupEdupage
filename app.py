@@ -41,7 +41,7 @@ def get_school_years(currentrok):
     if yearyoustarted < 2012:
         print(f"I don´t know if you started in year {yearyoustarted} or do you want to timeout your Edupage?.")
         exit()
-    if yearyoustarted > 2023:
+    if yearyoustarted > int(currentrok):
         print(f"Yes, you are very funny...")
         exit()
     return list(range(yearyoustarted, currentrok))
