@@ -3,7 +3,7 @@
 ## 📂 Description
 
 This file will download your **EduPage profile**, allowing users to keep a copy of their profile and important data to **prevent** their loss. <br>
-The download uses the **Python package** [EdupageAPI](https://github.com/ivanhrabcak/edupage-api)<br>
+The download use the **Python package** [EdupageAPI](https://github.com/ivanhrabcak/edupage-api)<br>
 This Python file is made very **quick** so I can back up my files. It wasn't made for publication, so please don't be "angry" that it's so stupidly written.
 
 ## ⚙️ Start
